@@ -130,9 +130,9 @@ initialised = true;
                 p3dc_add_block(-l,-w,-h,l,w,0);
             p3dc_end_model();
         }
-        
+        z += zspeed;
         if (z &gt; floorHeight){
-        zspeed -= 0.25*mass;
+            zspeed -= 0.25*mass;
         }else if (z &lt; floorHeight){
             z = floorHeight;
         }else{
@@ -145,9 +145,6 @@ initialised = true;
         else{
             speed = 0;
         }
-        
-        z += zspeed;
-        
         if(z &lt; 0){
             z = floorHeight;
         }
