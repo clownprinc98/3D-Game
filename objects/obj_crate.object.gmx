@@ -29,6 +29,8 @@
 WDX = 0;
 WDY = 0;
 type = "solid";
+canBeHeld = 1;
+
 w = 0;
 l = 0;
 z = 0;
@@ -116,9 +118,9 @@ initialised = true;
             <string>if(initialised and !PAUSED){
 
     if(held){
-        x = heldBy.x + heldBy.walkDirX;
-        y = heldBy.y + heldBy.walkDirY;
-        z = heldBy.z + (heldBy.height/2)
+        x = heldBy.x;
+        y = heldBy.y;
+        z = heldBy.z + (5*heldBy.height/8)
     }
     else{
         if(xOld != x or yOld != y or zOld != z){
@@ -130,6 +132,7 @@ initialised = true;
                 p3dc_add_block(-l,-w,-h,l,w,0);
             p3dc_end_model();
         }
+        
         z += zspeed;
         if (z &gt; floorHeight){
             zspeed -= 0.25*mass;
@@ -174,12 +177,16 @@ initialised = true;
                     }
                 }
                 
-                // collide with other blovks.
-                if(p3dc_check(col_model,x,y, z+(h/2), obj.col_model, obj.x,obj.y,obj.z+(obj.h/2))){
-                    x=xprevious;
-                    y=yprevious;
+                // collide with other blocks.
+                if(p3dc_check(col_model,x+(0.1*WDX),y+(0.1*WDY), z+(h/2), obj.col_model, obj.x,obj.y,obj.z+(obj.h/2))){
+                    // need to check im not inside block or player will be pushed infinitely.
+                    x = xprevious;
+                    y = yprevious;
                     obj_player.x -= WDX;
                     obj_player.y -= WDY;
+                    WDX = 0;
+                    WDY = 0;
+                    speed = -1 * abs(0.66*speed);
                 }
                 
             }

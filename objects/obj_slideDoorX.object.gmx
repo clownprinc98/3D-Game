@@ -32,6 +32,8 @@ z = 0;
 zdir = 0;
 xdir = 0;
 ydir = 0;
+canBeHeld = 0;
+type = "solid";
 
 text = background_get_texture(tex_kayne);
 offset=0;
@@ -128,9 +130,7 @@ p3dc_end_model();
           <argument>
             <kind>1</kind>
             <string>if(initialised){
-
     d3d_draw_block(x-l+offset,y-w,z, x+l,y+w,z+h*2, text,1,1);
-
 }
 </string>
           </argument>

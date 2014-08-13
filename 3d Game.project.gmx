@@ -246,6 +246,7 @@
     <objects name="interactable">
       <object>objects\parent_interactable</object>
       <object>objects\obj_slideDoorX</object>
+      <object>objects\obj_slideDoorY</object>
       <object>objects\obj_crate</object>
       <object>objects\obj_Rdoor</object>
     </objects>
@@ -265,7 +266,7 @@
     <room>rooms\room2</room>
   </rooms>
   <constants number="2">
-    <constant name="GM_build_date">41864.1573067593</constant>
+    <constant name="GM_build_date">41864.2086125116</constant>
     <constant name="GM_version">'1.0.0.0'</constant>
   </constants>
   <help>

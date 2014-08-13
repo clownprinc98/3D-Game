@@ -3,9 +3,9 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>1000</depth>
+  <depth>0</depth>
   <persistent>0</persistent>
-  <parentName>&lt;undefined&gt;</parentName>
+  <parentName>parent_interactable</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -25,37 +25,86 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>globalvar world_col;
-x=0;
-y=0;
-z=0;
+            <string>opening = 0;
+initialised=false;
+alarm[0] = 1;
+z = 0;
+zdir = 0;
+xdir = 0;
+ydir = 0;
+canBeHeld = 0;
+type = "solid";
 
-//Init 3D
-p3dc_init();
-d3d_start();
-d3d_set_lighting(true);
-d3d_set_hidden(1);
-draw_set_color(c_white);
+text = background_get_texture(tex_kayne);
+offset=0;
 
-OBJECT[OINDEX] = instance_create(x,y,obj_slideDoorY);
-with (OBJECT[OINDEX] ){
-    x=635;
-    y=382;
-    z=0;
-    height=100;
-    angle=0;
-    rotAxis = "z";
-    idIndex = 0;
-    type = "solid";
-    OINDEX++;
-    w = 32;
+l = 2;
+w = 30;
+h = 50;
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>col_model = p3dc_begin_model();
+    //p3dc_add_model("vDoor.d3d",x,y,z)
+    p3dc_add_block(-l,-w+offset,z, l,w,z+h*2);
+p3dc_end_model();
+
+initialised = true;
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if(opening and offset &lt; 4*w){
+    offset+=2; 
+    // door is open -l + offset = 0
+}
+else if(!opening and offset &gt; 0){
+    offset -= 2;
+    // door is closed. -l + offset = 0
 }
 
-
-
-// make world collision model
-world_col = p3dc_begin_model();
-    p3dc_add_model("world.d3d",0,0,0);
+p3dc_clear_model(col_model);
+    col_model = p3dc_begin_model();
+    p3dc_add_block(-l,-w+offset,z, l,w,z+h*2);
 p3dc_end_model();
 
 </string>
@@ -80,8 +129,9 @@ p3dc_end_model();
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//d3d_light_define_ambient(c_orange);
-
+            <string>if(initialised){
+    d3d_draw_block(x-l,y-w+offset,z, x+l,y+w,z+h*2, text,1,1);
+}
 </string>
           </argument>
         </arguments>

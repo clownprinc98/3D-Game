@@ -3,7 +3,7 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>-1000</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -127,6 +127,7 @@ switch string(itemLocation[mouseGridPos]){
             <string>d3d_set_projection_ortho(0,0,room_width,room_height,0);
 d3d_set_lighting(false);
 d3d_set_hidden(false);
+
 
 var alpha = draw_get_alpha();
 var colour = draw_get_colour();

@@ -41,7 +41,7 @@ health = 100;
 
 
 /* interction variables */
-reachLength = 50;
+reachLength = 75;
 heldObject = noone;
 holdingObject = 0;
 /* movement variables */
@@ -99,9 +99,7 @@ d3d_model_load(world_model, "world.d3d");
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
-
-</string>
+            <string></string>
           </argument>
         </arguments>
       </action>
@@ -141,6 +139,7 @@ if(fastWalk){
         event_perform(ev_other, ev_user1);
     }
 }
+    
     // MOUSE LOOKING
     var sw,sh;
     sw = display_get_width()/2;
@@ -177,11 +176,13 @@ if(fastWalk){
         canJump = 0;
         for(var i = 0; i &lt; array_length_1d(OBJECT); i++){
             var obj = OBJECT[i]
-            // first check under self
-            if(p3dc_check(player_col,x,y, z-1, obj.col_model, obj.x,obj.y,obj.z+obj.h)){
-                if(obj.type == "solid"){
-                    floorHeight = z;
-                    canJump = 1;
+            if(obj != heldObject){
+                // first check under self
+                if(p3dc_check(player_col,x,y, z-1, obj.col_model, obj.x,obj.y,obj.z+obj.h)){
+                    if(obj.type == "solid"){
+                        floorHeight = z;
+                        canJump = 1;
+                    }
                 }
             }
         }
@@ -215,20 +216,21 @@ if(fastWalk){
                 // then check in walking direciton.
                 if(p3dc_check(player_col,x,y,z + (6*height/10), obj.col_model, obj.x,obj.y,obj.z + obj.h)){
                     if(obj.type == "solid"){
-                        // push block.
+                        // check if block doesn't collide with world and push block.
                         if(canJump and 
-                        !p3dc_check_still(obj.col_model,obj.x+ walkDirX,obj.y+walkDirY,obj.z+obj.h, world_col)
+                        !p3dc_check_still(obj.col_model,obj.x + walkDirX,obj.y + walkDirY,obj.z+(obj.h/2), world_col)
                         ){
                             obj.WDY = walkDirY;
                             obj.WDX = walkDirX;
                             obj.x += walkDirX;
                             obj.y += walkDirY;
-                        }else{
-                            x=xprevious;
-                            y=yprevious;
+                        }else if(obj != heldObject){
+                            x = xprevious;
+                            y = yprevious;
+                             break;
                         }
                         //canJump = 0;
-                        break;
+                       
                     }
                 }
                 else if(p3dc_check(player_col,x,y,z + (4*height/10), obj.col_model, obj.x,obj.y,obj.z + obj.h)){
@@ -379,7 +381,46 @@ if(fastWalk){
         </arguments>
       </action>
     </event>
-    <event eventtype="6" enumb="56">
+    <event eventtype="6" enumb="54">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>//paused ^= 1;
+
+//var o = instance_create(x+10,y,obj_box);
+//o.z = 500;
+
+OBJECT[OINDEX] = instance_create(x+100,y,obj_crate);
+
+with(OBJECT[OINDEX]){
+    h = 20;
+    x = self.x;
+    y = self.y
+    z = 50*array_length_1d(OBJECT);
+    w = 25;
+    l = 25;
+    OINDEX+=1;;
+}
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="6" enumb="53">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -417,11 +458,16 @@ if( !PAUSED){
             p3dc_set_modrot(degtorad(obj.xdir),degtorad(obj.ydir),degtorad(obj.zdir));
             tempdis = p3dc_ray_rotation(obj.col_model,obj.x,obj.y,obj.z,x,y,z+height,Rxdir,Rydir,Rzdir);
             if(tempdis &lt; reachLength){
-                obj.heldBy = self.id;
-                obj.held = 1;
-                self.holdingObject = 1;
-                self.heldObject = obj;
-                break;
+                if(obj.canBeHeld){
+                    obj.heldBy = self.id;
+                    obj.held = 1;
+                    self.holdingObject = 1;
+                    self.heldObject = obj;
+                    break;
+                }
+                else{
+                    obj.opening ^= 1;
+                }
             }
         }
     }
@@ -440,45 +486,6 @@ if( !PAUSED){
         holdingObject=0;
         
     }
-}
-
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="6" enumb="54">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>//paused ^= 1;
-
-//var o = instance_create(x+10,y,obj_box);
-//o.z = 500;
-
-OBJECT[OINDEX] = instance_create(x+100,y,obj_crate);
-
-with(OBJECT[OINDEX]){
-    h = 20;
-    x = self.x;
-    y = self.y
-    z = 50*array_length_1d(OBJECT);
-    w = 25;
-    l = 25;
-    OINDEX+=1;;
 }
 
 </string>
