@@ -3,9 +3,9 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>10</depth>
   <persistent>0</persistent>
-  <parentName>parent_interactable</parentName>
+  <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -25,49 +25,23 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>alarm[0] = 1;
-WDX = 0;
-WDY = 0;
-attrs = "solid, pushable, pickupable";
+            <string>//Init variables for moving
+z=5;//z is at the eye level
+height = 40;
 
-w = 0;
-l = 0;
-z = 0;
-h = 0;
-
-zOld = z;
-xOld = x;
-yOld = y;
-
-floorHeight = -1;
-zspeed = 0;
-zspeedTo = 0;
-
-zdir = 0;
-xdir = 0;
-ydir = 0;
-mass = 1;
-
-idIndex = -1;
-
-held = 0;
-heldBy = noone;
-
-initialised = false;
-mSpeed = 0.25*mass;
-var t = choose(tex_01, tex_02, tex_03, tex_04, tex_05);
-text = background_get_texture(t);
-
-col_model = p3dc_begin_model();
-    p3dc_add_block(-l,-w,z,l,w,h);
-p3dc_end_model();
+zdir=0;
+zspeed=0;
+zprevious=5;
+display_mouse_set(display_get_width()/2,display_get_height()/2)
+//Acceleration
+accelerate=0;
 
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="2" enumb="0">
+    <event eventtype="3" enumb="2">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -84,13 +58,31 @@ p3dc_end_model();
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>p3dc_clear_model(col_model);
+            <string>//Collision Checking + Smooth Reactions//
 
-col_model = p3dc_begin_model();
-    p3dc_add_block(-l,-w,z,l,w,z+h);
-p3dc_end_model();
+z -= zspeed;
+zref=min(p3dc_ray(global.level_collision,0,0,0,x-1.3,y-1.3,z,0,0,-1),
+p3dc_ray(global.level_collision,0,0,0,x-1.3,y+1.3,z,0,0,-1),
+p3dc_ray(global.level_collision,0,0,0,x+1.3,y-1.3,z,0,0,-1),
+p3dc_ray(global.level_collision,0,0,0,x+1.3,y+1.3,z,0,0,-1));
 
-initialised = true;
+if(zref &lt;= 5 and zspeed &lt; 0){
+    zref = zprevious-4;
+    zspeed = 1;
+    z = zprevious-1;
+    x = xprevious;
+    y = yprevious;
+}
+
+
+if(zref &lt;= 5){
+    z = 5+z-zref;
+    zspeed = 1;
+}else{
+    zspeed+=0.1;
+}
+
+zprevious=z;
 
 </string>
           </argument>
@@ -114,98 +106,56 @@ initialised = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(initialised and !PAUSED){
+            <string>//MOVING AROUND/FORCING INSIDE THE ROOM//
 
-    if(held){
-        x = heldBy.x;
-        y = heldBy.y;
-        z = heldBy.z + (5*heldBy.height/8)
-    }
-    else{
-        if(xOld != x or yOld != y or zOld != z){
-            xOld = x;
-            yOld = y;
-            zOld = z;
-            p3dc_clear_model(col_model);
-            col_model = p3dc_begin_model();
-                p3dc_add_block(-l,-w,-h,l,w,0);
-            p3dc_end_model();
-        }
-        
-        z += zspeed;
-        if (z &gt; floorHeight){
-            zspeed -= 0.25*mass;
-        }else if (z &lt; floorHeight){
-            z = floorHeight;
-        }else{
-            zspeed = 0;
-        }
-        
-        if(speed &gt; 0){
-            speed -= 0.4025*mass;
-        }
-        else{
-            speed = 0;
-        }
-        if(z &lt; 0){
-            z = floorHeight;
-        }
-        
-        
-        
-        
-        
-        // check under self.
-        if(p3dc_check_still(col_model,x,y,z-abs(zspeed),world_col) == true){
-            floorHeight = z;
-            if(speed &gt;0) speed -= 0.25;
-        }
-        else{
-            floorHeight = -1; // keep falling until we find jesus or the floor.
-        }
-            
-        
-        for(var i = 0; i &lt; array_length_1d(OBJECT); i++){
-            var obj = OBJECT[i]
-            if(self.id != OBJECT[i]){
-                // first check under self
-                if(p3dc_check(col_model,x,y, z-abs(zspeed), obj.col_model, obj.x,obj.y,obj.z+obj.h)){
-                    if(has_attr("solid", obj.attrs)){
-                        floorHeight = obj.z+obj.h;
-                        zspeed = 0;
-                    }
-                }
-                
-                // collide with other blocks.
-                if(p3dc_check(col_model,x+(0.1*WDX),y+(0.1*WDY), z+(h/2), obj.col_model, obj.x,obj.y,obj.z+(obj.h/2))){
-                    // need to check im not inside block or player will be pushed infinitely.
-                    x = xprevious;
-                    y = yprevious;
-                    obj_player.x -= WDX;
-                    obj_player.y -= WDY;
-                    WDX = 0;
-                    WDY = 0;
-                    speed = -1 * abs(0.66*speed);
-                }
-                
-            }
-        }
-        
-        // collide with world.
-        // check in front of self at head and then floor
-        if(p3dc_check_still(col_model,x,y,z+h, world_col) == true){
-            x=xprevious;
-            y=yprevious;
-        }
-    }
+//MOUSELOOK
+var sw,sh;
+sw = display_get_width()/2;
+sh = display_get_height()/2;
+
+direction += (sw- display_mouse_get_x())/4;
+zdir += (sh - display_mouse_get_y())/4;
+
+display_mouse_set(sw,sh);
+zdir = min( max(zdir,-70) ,85);
+
+//MOVE
+if(keyboard_check(vk_left) or keyboard_check(ord('A'))){
+    x += lengthdir_x(2, direction+90);
+    y += lengthdir_y(2, direction+90);
+}
+if(keyboard_check(vk_right) or keyboard_check(ord('D'))){
+    x += lengthdir_x(2, direction-90);
+    y += lengthdir_y(2, direction-90);
+}
+if(keyboard_check(vk_up) or keyboard_check(ord('W'))){
+    x += lengthdir_x(2, direction);
+    y += lengthdir_y(2, direction);
+}
+if(keyboard_check(vk_down) or keyboard_check(ord('S'))){
+    x += lengthdir_x(2, direction-180);
+    y += lengthdir_y(2, direction-180);
 }
 
+//Force inside the room
+if(x &lt; 4){
+    x=xprevious;
+}
+if(y &lt; 4){
+    y=yprevious;
+}
+if(x &gt; room_width-4){
+    x=room_width-4;
+}
+if(y &gt; room_height-4){
+    y=room_height-4;
+}
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="6" enumb="52">
+    <event eventtype="6" enumb="53">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -222,9 +172,22 @@ initialised = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>z += 1;
-floorHeight = z;
+            <string>//COLLISION CODE DONE IN THE BULLET. Change the variable spd here to change how far it moves per step (distance of 30/step at the moment)
+var i;
 
+var xcomp = cos(direction/180*pi);
+var ycomp = -sin(direction/180*pi);
+var zcomp = tan(degtorad(zdir));
+
+p3dc_set_modrot(0,0,degtorad(global.doorInst.zdir));
+var dist = p3dc_ray_rotation(global.doorInst.col_model, global.doorInst.x, 
+global.doorInst.y, global.doorInst.z, 
+x,y,z+height,
+xcomp, ycomp, zcomp);
+
+if(dist != 10000000){
+    global.doorInst.opening ^= 1;
+}
 </string>
           </argument>
         </arguments>
@@ -247,10 +210,44 @@ floorHeight = z;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(initialised){
-    d3d_draw_block(x-l,y-w,z-h, x+l,y+w, z+h, text,1,1);
-}
+            <string>//Draw the 3D projection
+draw_set_color(c_white);
 
+d3d_set_projection(x,y,z+height,x+cos(degtorad(direction))*cos(degtorad(zdir)),
+y-sin(degtorad(direction))*cos(degtorad(zdir)),
+z+height+sin(degtorad(zdir)), 0,0,1);
+
+/*
+d3d_set_projection_ext(x,y,z,
+x+cos(degtorad(direction))*cos(degtorad(zdir)),
+y-sin(degtorad(direction))*cos(degtorad(zdir)),
+z+sin(degtorad(zdir)),0,0,1,45,view_wview[0]/view_hview[0],1,262144);
+*/
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="32">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if(zspeed = 1){
+    zspeed =- 3;
+}
 </string>
           </argument>
         </arguments>

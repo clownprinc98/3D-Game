@@ -31,7 +31,6 @@ globalvar PAUSED, OINDEX, OBJECT;
 PAUSED = 0;
 OINDEX = 0;
 
-
 room_goto(room2);
 
 </string>

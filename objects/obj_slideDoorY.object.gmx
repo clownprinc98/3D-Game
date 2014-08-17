@@ -33,7 +33,7 @@ zdir = 0;
 xdir = 0;
 ydir = 0;
 canBeHeld = 0;
-type = "solid";
+attrs = "solid, door";
 
 text = background_get_texture(tex_kayne);
 offset=0;

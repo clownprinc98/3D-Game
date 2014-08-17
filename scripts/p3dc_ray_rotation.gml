@@ -25,6 +25,6 @@ use p3dc_set_modrot(<...>);
 ----
 Returns the distance to the *closest* triangle that was hit. Returns 10000000 if no triangle was hit.
 */
-return external_call(global.p3dc_mrs,argument0,argument1,argument2,argument3,argument4,argument5,argument6,argument7,argument8,argument9);
-//return external_call(global.p3dc_mrr,argument0,argument1,argument2,argument3,argument4,argument5,argument6,argument7,argument8,argument9);
+//return external_call(global.p3dc_mrs,argument0,argument1,argument2,argument3,argument4,argument5,argument6,argument7,argument8,argument9);
+return external_call(global.p3dc_mrr,argument0,argument1,argument2,argument3,argument4,argument5,argument6,argument7,argument8,argument9);
 

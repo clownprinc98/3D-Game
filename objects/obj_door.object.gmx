@@ -26,48 +26,31 @@
           <argument>
             <kind>1</kind>
             <string>alarm[0] = 1;
-opening = 0;
 zdir = 0;
-openSpeed = 2;
+xdir = 0;
+ydir = 0;
+attrs = "solid, door"
 initialised=false;
+opening = 0;
 
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="2" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>draw_model = d3d_model_create();
-d3d_model_load(draw_model, "hDoor.d3d");
+z = 0;
+
+zmin = 0;
+zmax = -90;
 
 col_model = p3dc_begin_model();
-    p3dc_add_model("hDoor.d3d",x,y,z)
+    p3dc_add_model("door.d3d",0,0,z);
 p3dc_end_model();
 
-initialised=true;
+draw_model = d3d_model_create();
+d3d_model_load(draw_model, "door.d3d");
 
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="3" enumb="0">
+    <event eventtype="3" enumb="1">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -84,16 +67,12 @@ initialised=true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(opening){
-    if(zdir &gt;= 90){
-        global.interactable_world[idIndex] = instance_create(x,y,obj_Vdoor);
-        global.interactable_world[idIndex].z = z;
-        global.interactable_world[idIndex].idIndex = idIndex;
-        instance_destroy();
-    }
-    zdir += openSpeed;
+            <string>if(opening and zdir &gt; zmax){
+    zdir -= 3;
 }
-
+else if(!opening and zdir &lt; 0){
+    zdir += 3;
+}
 </string>
           </argument>
         </arguments>
@@ -116,17 +95,17 @@ initialised=true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(initialised){
-    d3d_transform_set_identity();
+            <string>    d3d_transform_set_identity();
+    d3d_transform_set_translation(0, 0 ,0);
     
     d3d_transform_add_rotation_z(zdir);
+
+    d3d_transform_add_translation(x,y,0); // re-center to center of model
     
-    d3d_transform_add_translation(x,y,z);
-    
-    d3d_model_draw_angle(draw_model, x, y, z, -1, zdir);
+    d3d_model_draw(draw_model,0,0,0,-1);
     
     d3d_transform_set_identity();
-}
+
 </string>
           </argument>
         </arguments>

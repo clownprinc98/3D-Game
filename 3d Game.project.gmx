@@ -3,7 +3,7 @@
   <Configs name="configs">
     <Config>Configs\Default</Config>
   </Configs>
-  <datafiles number="13" name="datafiles">
+  <datafiles number="17" name="datafiles">
     <datafile>
       <name>P3DC.dll</name>
       <exists>-1</exists>
@@ -73,9 +73,9 @@
       <filename>block.d3d</filename>
     </datafile>
     <datafile>
-      <name>hDoor.d3d</name>
+      <name>house.d3d</name>
       <exists>-1</exists>
-      <size>4642</size>
+      <size>34674</size>
       <exportAction>2</exportAction>
       <exportDir></exportDir>
       <overwrite>0</overwrite>
@@ -87,10 +87,10 @@
           <CopyToMask>9223372036854775807</CopyToMask>
         </Config>
       </ConfigOptions>
-      <filename>hDoor.d3d</filename>
+      <filename>house.d3d</filename>
     </datafile>
     <datafile>
-      <name>vDoor.d3d</name>
+      <name>door.d3d</name>
       <exists>-1</exists>
       <size>4642</size>
       <exportAction>2</exportAction>
@@ -104,7 +104,7 @@
           <CopyToMask>9223372036854775807</CopyToMask>
         </Config>
       </ConfigOptions>
-      <filename>vDoor.d3d</filename>
+      <filename>door.d3d</filename>
     </datafile>
   </datafiles>
   <NewExtensions/>
@@ -144,7 +144,9 @@
     <background>background\bg_bazings</background>
     <background>background\bg_floor</background>
     <background>background\bg_walls</background>
+    <background>background\bck_wall</background>
     <background>background\tex_kayne</background>
+    <background>background\tex_house</background>
     <background>background\background6</background>
     <backgrounds name="textures">
       <background>background\tex_02</background>
@@ -227,6 +229,7 @@
     </scripts>
     <script>scripts\scr_check_block_col.gml</script>
     <script>scripts\scr_initINV.gml</script>
+    <script>scripts\has_attr.gml</script>
     <script>scripts\not_in.gml</script>
   </scripts>
   <objects name="objects">
@@ -240,6 +243,9 @@
     <object>objects\obj_any</object>
     <object>objects\obj_test</object>
     <object>objects\obj_initGame</object>
+    <objects name="statics">
+      <object>objects\obj_house</object>
+    </objects>
     <object>objects\obj_ray</object>
     <object>objects\obj_controller</object>
     <object>objects\obj_flashlight</object>
@@ -248,7 +254,7 @@
       <object>objects\obj_slideDoorX</object>
       <object>objects\obj_slideDoorY</object>
       <object>objects\obj_crate</object>
-      <object>objects\obj_Rdoor</object>
+      <object>objects\obj_door</object>
     </objects>
     <objects name="npcs">
       <object>objects\obj_ghost</object>
@@ -266,7 +272,7 @@
     <room>rooms\room2</room>
   </rooms>
   <constants number="2">
-    <constant name="GM_build_date">41864.2086125116</constant>
+    <constant name="GM_build_date">41868.4331145023</constant>
     <constant name="GM_version">'1.0.0.0'</constant>
   </constants>
   <help>
