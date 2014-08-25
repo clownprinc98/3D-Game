@@ -30,24 +30,11 @@ x=0;
 y=0;
 z=0;
 
-//Init 3D
-p3dc_init();
-d3d_start();
+
 d3d_set_lighting(true);
 d3d_set_hidden(1);
 draw_set_color(c_white);
 
-
-
-i=0;
-c[i] = instance_create(700,50,obj_house);
-c[i++].z = 0;
-
-c[i] = instance_create(700,400,obj_house);
-c[i++].z = 0;
-
-c[i] = instance_create(700,750,obj_house);
-c[i++].z = 0;
 
 draw_world_model = d3d_model_create();
 d3d_model_load(draw_world_model, "world.d3d");
@@ -55,10 +42,38 @@ d3d_model_load(draw_world_model, "world.d3d");
 // make world collision model
 world_col = p3dc_begin_model();
     p3dc_add_model("world.d3d",0,0,0);
-    for(var i=0; i &lt; array_length_1d(c);i++){
-        p3dc_add_model("house.d3d",c[i].x,c[i].y,c[i].z);
+p3dc_end_model();
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="7" enumb="10">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// make world collision model
+
+p3dc_clear_model(world_col);
+world_col = p3dc_begin_model();
+    p3dc_add_model("world.d3d",0,0,0);  
+    for(var i = 0; i &lt; array_length_1d(STATICS); i++){
+        p3dc_add_model(STATICS[i].model, STATICS[i].x, STATICS[i].y, STATICS[i].z);
     }
-    
 p3dc_end_model();
 
 </string>
@@ -86,6 +101,7 @@ p3dc_end_model();
             <string>//d3d_light_define_ambient(c_orange);
 
 d3d_model_draw(draw_world_model,0,0,0,-1);
+
 </string>
           </argument>
         </arguments>

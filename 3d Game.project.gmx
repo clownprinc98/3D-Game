@@ -136,6 +136,7 @@
     </sprites>
     <sprite>sprites\sprite8</sprite>
     <sprite>sprites\spr_32</sprite>
+    <sprite>sprites\spr_house</sprite>
     <sprite>sprites\spr_64</sprite>
     <sprite>sprites\spr_dark</sprite>
   </sprites>
@@ -245,6 +246,7 @@
     <object>objects\obj_initGame</object>
     <objects name="statics">
       <object>objects\obj_house</object>
+      <object>objects\obj_staticParent</object>
     </objects>
     <object>objects\obj_ray</object>
     <object>objects\obj_controller</object>
@@ -272,7 +274,7 @@
     <room>rooms\room2</room>
   </rooms>
   <constants number="2">
-    <constant name="GM_build_date">41868.4331145023</constant>
+    <constant name="GM_build_date">41876.5216603472</constant>
     <constant name="GM_version">'1.0.0.0'</constant>
   </constants>
   <help>
