@@ -131,7 +131,7 @@ if(madPotionActive){
 }
 
 if(fastWalk){
-    if(fastSteps &gt; 500){
+    if(fastSteps &gt; 1000){
         event_perform(ev_other, ev_user1);
     }
 }
